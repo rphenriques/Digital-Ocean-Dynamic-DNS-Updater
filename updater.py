@@ -90,7 +90,7 @@ def get_domain(name, token):
         else:
             break
 
-    raise Exception(f"Could not find domain: {name}")
+    raise Exception("Could not find domain: {name}".format(name=name))
 
 
 def get_record(domain, name, rtype, token):
@@ -112,7 +112,7 @@ def get_record(domain, name, rtype, token):
         else:
             break
 
-    raise Exception(f"Could not find record: {name}")
+    raise Exception("Could not find record: {name}".format(name=name))
 
 
 def set_record_ip(domain, record, ipaddr, token):
@@ -126,21 +126,23 @@ def set_record_ip(domain, record, ipaddr, token):
     if result['domain_record']['data'] == ipaddr:
         debug("Record {}.{} sucessfully updated to {}", record['name'], domain['name'], ipaddr)
     else:
-        raise Exception(f"Could not set {record['name']}.{domain['name']} to {ipaddr}")
+        raise Exception("Could not set {record_name}.{domain_name} to {ipaddr}".format(record_name=record['name'],
+                                                                                        domain_name=domain['name'],
+                                                                                        ipaddr=ipaddr))
 
 
 def output(line, *args):
     quiet = getattr(output, 'quiet', False)
     if quiet:
         return
-    print(f"[{datetime.now()}]", line.format(*args))
+    print("[{dt_now}]".format(dt_now=datetime.now()), line.format(*args))
 
 
 def debug(line, *args):
     debugEnable = getattr(debug, 'debug', False)
     if not debugEnable:
         return
-    output(f"DEBUG - {line}", *args)
+    output("DEBUG - {line}".format(line=line), *args)
 
 def process_args():
     parser = argparse.ArgumentParser(description='Updates DNS records in Digital Ocean')
@@ -177,7 +179,7 @@ def run(args):
         return ec
 
     except (Exception) as err:
-        print(f"[{datetime.now()}] ERROR - {err}", file=sys.stderr)
+        print("[{dt_now}] ERROR - {err}".format(dt_now=datetime.now()), file=sys.stderr)
         return -1
 
 
